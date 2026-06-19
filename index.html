@@ -1,210 +1,650 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>For Wafaa ❤️</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>For My Beautiful Wife</title>
+    <!-- Tailwind CSS v4 -->
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght=400;600;700&family=Playfair+Display:ital,wght=0,400;1,400&family=Poppins:wght=300;400&display=swap" rel="stylesheet">
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <style>
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: radial-gradient(circle at center, #14070a 0%, #050203 100%);
+            overflow: hidden;
+            perspective: 1500px;
+        }
+        .font-luxury { font-family: 'Cinzel', serif; }
+        .font-romance { font-family: 'Playfair Display', serif; }
+        
+        /* 3D BOOK STRUCTURE */
+        .book-container {
+            position: relative;
+            width: 350px;
+            height: 520px;
+            transition: all 1.5s cubic-bezier(0.25, 1, 0.5, 1);
+            transform-style: preserve-3d;
+            transform: rotateX(15deg) rotateY(0deg) scale(0.9);
+            opacity: 0;
+            pointer-events: none;
+        }
+        .book-container.visible {
+            opacity: 1;
+            pointer-events: auto;
+            transform: rotateX(10deg) rotateY(-10deg) scale(1);
+        }
+        .book-container.closed-final {
+            transform: rotateX(15deg) rotateY(-180deg) scale(0.8) translateY(-30px);
+            opacity: 0;
+            transition: all 2s cubic-bezier(0.25, 1, 0.5, 1);
+        }
 
-<!-- Fonts: Cairo for Arabic, Great Vibes for English -->
-<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700&family=Great+Vibes&display=swap" rel="stylesheet">
+        .page {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            top: 0;
+            left: 0;
+            transform-origin: left center;
+            transition: transform 1.4s cubic-bezier(0.4, 0, 0.2, 1);
+            transform-style: preserve-3d;
+            cursor: pointer;
+        }
+        
+        /* Cover styling */
+        .cover-front {
+            background: linear-gradient(135deg, #2e1216 0%, #120507 100%);
+            border: 2px solid rgba(212, 163, 115, 0.25);
+            border-radius: 4px 12px 12px 4px;
+            box-shadow: inset 0 0 30px rgba(0,0,0,0.8), 10px 10px 40px rgba(0,0,0,0.6);
+            z-index: 10;
+            backface-visibility: hidden;
+        }
+        .book-container.open-1 .cover-front {
+            transform: rotateY(-160deg);
+            z-index: 1;
+        }
 
-<style>
-body{
-margin:0;
-padding:0;
-font-family:'Cairo',sans-serif;
-background:radial-gradient(circle at top,#ffccd5,#ff99aa);
-height:100vh;
-overflow:hidden;
-display:flex;
-justify-content:center;
-align-items:center;
-color:white;
-}
+        /* Base styling for dark luxury paper pages */
+        .paper-page {
+            background: linear-gradient(145deg, #1e0a0d 0%, #2d1114 100%);
+            color: #f3eae8;
+            border-radius: 2px 8px 8px 2px;
+            padding: 32px 24px;
+            border: 1px solid rgba(212, 163, 115, 0.15);
+            box-shadow: inset 25px 0 40px rgba(0,0,0,0.7), 5px 5px 25px rgba(0,0,0,0.4);
+            backface-visibility: hidden;
+        }
 
-/* Password screen */
-#login{
-position:absolute;
-width:100%;
-height:100%;
-display:flex;
-flex-direction:column;
-justify-content:center;
-align-items:center;
-background:linear-gradient(135deg,#ff99aa,#ff3366);
-z-index:5;
-border-radius:0;
-}
+        /* Page Layering & Flip Logic */
+        #pageLetter { z-index: 6; transform: rotateY(0deg); }
+        .book-container.open-2 #pageLetter { transform: rotateY(-155deg); z-index: 2; }
+        #pagePraise1 { z-index: 5; transform: rotateY(0deg); }
+        .book-container.open-3 #pagePraise1 { transform: rotateY(-153deg); z-index: 3; }
+        #pagePraise2 { z-index: 4; transform: rotateY(0deg); }
+        .book-container.open-4 #pagePraise2 { transform: rotateY(-151deg); z-index: 4; }
+        #pagePhotos { z-index: 3; transform: rotateY(0deg); }
 
-input{
-padding:12px 20px;
-border-radius:30px;
-border:none;
-font-size:18px;
-text-align:center;
-margin-top:15px;
-}
+        /* Falling Petals */
+        @keyframes floatPetal {
+            0% { transform: translateY(-10vh) translateX(0) rotate(0deg); opacity: 0; }
+            10% { opacity: 0.4; }
+            90% { opacity: 0.4; }
+            100% { transform: translateY(110vh) translateX(80px) rotate(360deg); opacity: 0; }
+        }
+        .petal {
+            position: absolute;
+            background: radial-gradient(circle, #a35c50 0%, #4a1913 100%);
+            border-radius: 50% 0 50% 50%;
+            pointer-events: none;
+            z-index: 0;
+            animation: floatPetal 8s linear infinite;
+        }
 
-button{
-margin-top:20px;
-padding:12px 35px;
-border:none;
-border-radius:40px;
-background:gold;
-font-size:20px;
-cursor:pointer;
-transition:0.3s;
-}
+        /* VISUAL BIRTHDAY CAKE & CANDLE PARSER */
+        .cake-display {
+            position: relative;
+            width: 240px;
+            height: 200px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: flex-end;
+        }
+        
+        /* 3D Tier Architecture */
+        .tier-base {
+            width: 180px;
+            height: 55px;
+            background: linear-gradient(to right, #3d1d1d, #5c2c2c, #2b1414);
+            border-radius: 8px 8px 4px 4px;
+            position: relative;
+            z-index: 10;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.5);
+        }
+        
+        .tier-top {
+            width: 130px;
+            height: 50px;
+            background: linear-gradient(to right, #4a2424, #733737, #331818);
+            border-radius: 6px 6px 2px 2px;
+            position: relative;
+            z-index: 20;
+            margin-bottom: -4px;
+        }
 
-button:hover{
-transform:scale(1.1);
-background:white;
-color:#ff3366;
-}
+        /* Drip Frosting Styling */
+        .frosting-white {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 15px;
+            background: #fff5f5;
+            border-radius: 0 0 6px 6px;
+            filter: drop-shadow(0 2px 2px rgba(0,0,0,0.2));
+        }
+        .frosting-white::after {
+            content: '';
+            position: absolute;
+            width: 100%;
+            height: 8px;
+            background: #fff5f5;
+            top: 10px;
+            left: 0;
+            clip-path: polygon(0% 0%, 10% 100%, 20% 0%, 35% 80%, 50% 0%, 65% 90%, 80% 0%, 90% 75%, 100% 0%);
+        }
 
-/* Main content */
-.container{
-display:none;
-text-align:center;
-max-width:850px;
-padding:50px;
-border-radius:30px;
-background:rgba(255,255,255,0.1);
-backdrop-filter:blur(25px);
-box-shadow:0 0 60px rgba(255,0,100,0.5);
-z-index:2;
-animation:fadeIn 2s ease-in-out;
-}
+        .frosting-pink {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 14px;
+            background: #f43f5e;
+            border-radius: 0 0 8px 8px;
+        }
+        .frosting-pink::after {
+            content: '';
+            position: absolute;
+            width: 100%;
+            height: 8px;
+            background: #f43f5e;
+            top: 10px;
+            left: 0;
+            clip-path: polygon(0% 0%, 15% 90%, 30% 0%, 45% 75%, 60% 0%, 75% 85%, 90% 0%, 100% 60%);
+        }
 
-h1{
-font-size:50px;
-margin-bottom:20px;
-text-shadow: 2px 2px 10px #ff4d88;
-}
+        /* Stand Plate */
+        .cake-plate {
+            width: 220px;
+            height: 10px;
+            background: linear-gradient(to right, #d4af37, #fff, #aa7c11);
+            border-radius: 50%;
+            z-index: 5;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.6);
+        }
 
-/* English message */
-.en{
-font-family:'Great Vibes', cursive;
-direction:ltr;
-font-size:36px;
-margin-top:15px;
-color:#fff;
-text-shadow: 2px 2px 8px #ff3366;
-}
+        /* Candle drop-in animation setup */
+        @keyframes dropInCandle {
+            0% { transform: translateY(-150px); opacity: 0; }
+            100% { transform: translateY(0); opacity: 1; }
+        }
+        @keyframes flameFlicker {
+            0%, 100% { transform: scale(1) rotate(-1deg); filter: drop-shadow(0 0 6px #f59e0b); }
+            50% { transform: scale(1.15) rotate(2deg); filter: drop-shadow(0 0 14px #ef4444); }
+        }
+        .animate-candle-stick { animation: dropInCandle 1.2s cubic-bezier(0.175, 0.885, 0.32, 1.15) forwards; }
+        .live-flame { animation: flameFlicker 0.5s infinite alternate; }
 
-/* Wafaa's photo */
-.photo{
-margin:0 auto 20px auto;
-width:200px;
-height:200px;
-border-radius:50%;
-border:5px solid gold;
-box-shadow:0 0 30px gold;
-object-fit:cover;
-display:block;
-}
-
-/* Falling hearts */
-.heart{
-position:absolute;
-color:#ff4d88;
-animation:fall linear infinite;
-opacity:0.9;
-font-size:24px;
-}
-
-@keyframes fall{
-0%{transform:translateY(-10vh);opacity:1;}
-100%{transform:translateY(110vh);opacity:0;}
-}
-
-@keyframes fadeIn{
-from{opacity:0;transform:translateY(40px);}
-to{opacity:1;transform:translateY(0);}
-}
-
-/* Footer style */
-.footer{
-position:fixed;
-bottom:10px;
-width:100%;
-text-align:center;
-font-family:'Great Vibes',cursive;
-font-size:18px;
-color:#ffdde1;
-text-shadow:1px 1px 5px #ff4d88;
-pointer-events:none;
-}
-</style>
+        /* Smoke puff animation for automatic extinguishing */
+        @keyframes puffSmoke {
+            0% { transform: translateY(0) scale(0.6); opacity: 0.8; filter: blur(1px); }
+            100% { transform: translateY(-35px) scale(2); opacity: 0; filter: blur(5px); }
+        }
+        .smoke-puff {
+            position: absolute;
+            width: 16px;
+            height: 16px;
+            background: rgba(230, 230, 230, 0.6);
+            border-radius: 50%;
+            pointer-events: none;
+            top: -24px;
+            display: none;
+        }
+        .smoke-active { display: block; animation: puffSmoke 0.9s ease-out forwards; }
+        
+        /* Word Sequencer Animations */
+        .text-glow-reveal {
+            animation: glowReveal 0.8s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+        }
+        @keyframes glowReveal {
+            0% { opacity: 0; transform: scale(0.95); filter: blur(10px); }
+            100% { opacity: 1; transform: scale(1); filter: blur(0px); }
+        }
+    </style>
 </head>
+<body class="text-zinc-300 min-h-screen relative w-full flex items-center justify-center select-none overflow-hidden">
 
-<body>
+    <!-- FLOATING BACKGROUND PETALS -->
+    <div id="petalContainer" class="absolute inset-0 overflow-hidden pointer-events-none"></div>
 
-<!-- Password screen -->
-<div id="login">
-<h2>🔐 Enter the password Wafaa</h2>
-<input type="password" id="pass" placeholder="Password">
-<button onclick="checkPass()">Enter ❤️</button>
-</div>
+    <!-- AUDIO BACKDROP -->
+    <audio id="bgMusic" loop src="https://files.catbox.moe/sav8jr.mp3"></audio>
 
-<!-- Main content -->
-<div class="container" id="content">
-<h1>Happy Valentine’s Day Wafaa ❤️</h1>
+    <!-- COUNTDOWN & ENTRANCE INTERFACE -->
+    <div id="entranceSection" class="absolute inset-0 z-50 flex flex-col items-center justify-center bg-[#050203] px-4 transition-all duration-1000 ease-out">
+        
+        <!-- Live Midnight Timer -->
+        <div id="timerContainer" class="text-center space-y-2 transition-all duration-1000">
+            <span class="text-[10px] tracking-[0.5em] text-zinc-500 uppercase block">Approaching Midnight</span>
+            <div id="countdownClock" class="font-luxury text-4xl md:text-5xl text-amber-100/90 tracking-widest tabular-nums">23:59:55</div>
+        </div>
 
-<!-- Photo under the title -->
-<img src="https://p16-common-sign.tiktokcdn-eu.com/tos-alisg-avt-0068/657447405f88978973867cf18512c2b8~tplv-tiktokx-cropcenter:720:720.jpeg?dr=10399&refresh_token=37b6ef97&x-expires=1771250400&x-signature=u9dLeYqLO03ZF4qnqsMMHNI00i0%3D&t=4d5b0474&ps=13740610&shp=a5d48078&shcp=81f88b70&idc=no1a" class="photo">
+        <!-- Word-by-Word Birthday Text Sequencer Container -->
+        <div id="wordSequencer" class="hidden text-center max-w-xl mx-auto px-4 h-24 flex items-center justify-center transition-all duration-1000">
+            <h1 id="sequencerText" class="font-luxury text-2xl md:text-4xl tracking-widest uppercase text-amber-100/90 drop-shadow-[0_0_12px_rgba(251,191,36,0.3)]"></h1>
+        </div>
 
-<!-- Arabic message -->
-<p style="font-size:22px;margin-top:10px;text-shadow:1px 1px 5px #ff3366;">
-عيد حب سعيد! وجودك يجعلني كل يوم أكثر سعادة. نحبك بزاف ❤️ 
-</p>
+        <!-- Realized Interactive Birthday Cake Viewport -->
+        <div id="cakeContainer" class="hidden flex flex-col items-center scale-95 opacity-0 transition-all duration-1000 ease-out mt-4">
+            
+            <div class="cake-display">
+                
+                <!-- Physical Dropping 24 Candles Stick -->
+                <div id="candleLayer" class="flex justify-center gap-4 opacity-0 absolute bottom-[92px] inset-x-0 mx-auto z-30 h-20 items-end">
+                    <!-- Candle 2 -->
+                    <div class="flex flex-col items-center relative">
+                        <!-- Dynamic Flame -->
+                        <div class="live-flame opacity-0 transition-opacity duration-700 w-3 h-5 bg-gradient-to-t from-amber-400 via-orange-500 to-rose-500 rounded-full absolute top-[-22px]"></div>
+                        <!-- Smoke puff element -->
+                        <div class="smoke-puff"></div>
+                        <!-- Wax Top Wick -->
+                        <div class="w-[2px] h-2 bg-zinc-400 absolute top-[-8px]"></div>
+                        <!-- Sculpted Number 2 Wax -->
+                        <span id="candleText2" class="candle-wax font-luxury text-4xl font-bold text-transparent bg-clip-text bg-gradient-to-b from-amber-100 to-amber-400 drop-shadow-[0_2px_6px_rgba(251,191,36,0.6)] z-10 transition-all duration-1000">2</span>
+                        <!-- Small anchor stick inserting into cake -->
+                        <div class="w-1 h-3 bg-gradient-to-b from-amber-300 to-orange-400 rounded-sm"></div>
+                    </div>
 
-<!-- English message -->
-<div class="en">Your presence makes me happier every day. I love u so much el ghalia❣️</div>
+                    <!-- Candle 4 -->
+                    <div class="flex flex-col items-center relative">
+                        <!-- Dynamic Flame -->
+                        <div class="live-flame opacity-0 transition-opacity duration-700 w-3 h-5 bg-gradient-to-t from-amber-400 via-orange-500 to-rose-500 rounded-full absolute top-[-22px]"></div>
+                        <!-- Smoke puff element -->
+                        <div class="smoke-puff"></div>
+                        <!-- Wax Top Wick -->
+                        <div class="w-[2px] h-2 bg-zinc-400 absolute top-[-8px]"></div>
+                        <!-- Sculpted Number 4 Wax -->
+                        <span id="candleText4" class="candle-wax font-luxury text-4xl font-bold text-transparent bg-clip-text bg-gradient-to-b from-amber-100 to-amber-400 drop-shadow-[0_2px_6px_rgba(251,191,36,0.6)] z-10 transition-all duration-1000">4</span>
+                        <!-- Small anchor stick inserting into cake -->
+                        <div class="w-1 h-3 bg-gradient-to-b from-amber-300 to-orange-400 rounded-sm"></div>
+                    </div>
+                </div>
 
-<button onclick="showLove()">Click Here 💌</button>
-</div>
+                <!-- TOP LAYER (Cream vanilla drip with sprinkles) -->
+                <div class="tier-top">
+                    <div class="frosting-white"></div>
+                    <!-- Decorative Tiny Sprinkles -->
+                    <div class="absolute bottom-2 inset-x-0 flex justify-around px-4 opacity-75">
+                        <span class="w-1 h-1 bg-rose-400 rounded-full"></span>
+                        <span class="w-1 h-1 bg-amber-300 rounded-full"></span>
+                        <span class="w-1 h-1 bg-teal-300 rounded-full"></span>
+                        <span class="w-1 h-1 bg-purple-400 rounded-full"></span>
+                    </div>
+                </div>
 
-<!-- Footer -->
-<div class="footer">Created with ❤️ by Iskander</div>
+                <!-- BOTTOM LAYER (Fudge Chocolate) -->
+                <div class="tier-base">
+                    <div class="frosting-pink"></div>
+                    <div class="w-full text-center font-luxury text-[8px] tracking-[0.3em] text-white/80 absolute bottom-3 uppercase drop-shadow-md">Happy Birthday</div>
+                </div>
 
-<!-- Auto-play music -->
-<audio id="music" autoplay loop>
-<source src="https://www.bensound.com/bensound-music/bensound-romantic.mp3" type="audio/mpeg">
-</audio>
+                <!-- GOLD SERVING PLATTER BASE -->
+                <div class="cake-plate"></div>
+            </div>
 
-<script>
+            <!-- Context Status Message -->
+            <h3 id="cakeInstruction" class="font-luxury text-[10px] text-amber-100/60 tracking-[0.25em] uppercase mt-6 transition-all duration-700">Happy Birthday, My Queen</h3>
+        </div>
 
-/* Password check */
-function checkPass(){
-if(document.getElementById("pass").value==="20020620"){
-document.getElementById("login").style.display="none";
-document.getElementById("content").style.display="block";
-document.getElementById("music").play();
-}else{
-alert("Incorrect password ❤️");
-}
-}
+        <!-- Key Vault Unlock Link -->
+        <div id="unlockAction" class="hidden opacity-0 text-center space-y-4 max-w-sm mt-8 transition-all duration-1000">
+            <div onclick="unlockBook()" class="w-16 h-16 mx-auto rounded-full bg-gradient-to-tr from-rose-950 to-zinc-900 border border-rose-400/30 flex items-center justify-center cursor-pointer hover:scale-110 hover:border-rose-300/80 transition-all duration-500 shadow-xl shadow-rose-500/5">
+                <i class="fa-solid fa-key text-rose-300/60 text-lg"></i>
+            </div>
+            <p class="font-luxury text-[10px] tracking-widest text-zinc-500">THE KEY IS ONLY WITH YOU</p>
+        </div>
+    </div>
 
-/* I Love You button */
-function showLove(){
-alert("I Love You ❤️");
-}
+    <!-- 3D BOOK ANIMATION ENGINE -->
+    <div id="birthdayBook" class="book-container">
+        
+        <!-- LAYER 1: FRONT COVER -->
+        <div onclick="flipPage(1)" id="coverFront" class="page cover-front flex flex-col items-center justify-center p-6 text-center">
+            <div class="border border-amber-500/20 p-8 h-full w-full flex flex-col items-center justify-center rounded-lg relative">
+                <!-- Infinity icon matches the theme of "Everything" -->
+                <span class="text-rose-400/40 text-lg mb-4"><i class="fa-solid fa-infinity"></i></span>
+                <h2 class="font-luxury text-amber-200/90 text-lg tracking-[0.25em] leading-relaxed uppercase">For My <br>Everything</h2>
+                <div class="w-10 h-[1px] bg-amber-500/30 my-6"></div>
+                <p class="text-[10px] text-zinc-500 uppercase tracking-widest">Click Cover to Open</p>
+            </div>
+        </div>
 
-/* Falling hearts */
-function createHeart(){
-let heart=document.createElement("div");
-heart.classList.add("heart");
-heart.innerHTML="❤";
-heart.style.left=Math.random()*100+"vw";
-heart.style.fontSize=(Math.random()*25+15)+"px";
-heart.style.animationDuration=(Math.random()*3+2)+"s";
-document.body.appendChild(heart);
-setTimeout(()=>heart.remove(),5000);
-}
-setInterval(createHeart,300);
+        <!-- LAYER 2: THE LOVE LETTER (CHAPTER 1) -->
+        <div onclick="flipPage(2)" id="pageLetter" class="page paper-page flex flex-col justify-between overflow-y-auto">
+            <div class="text-center text-amber-400/60 text-xs tracking-widest uppercase font-luxury mb-4">— Chapter One —</div>
+            
+            <div class="font-romance italic text-rose-100/90 text-[13px] md:text-[14px] leading-relaxed space-y-4 pr-1">
+                <p class="font-semibold text-amber-200/90 not-italic tracking-wide text-center">
+                    Happy Birthday, Weffouchti elghalia. ❤️
+                </p>
+                <p>"I wish I could be beside u today, celebrating ur special day and seeing your smile in person. Even though distance separates us, my heart is always with u omrii. Thank you for being such an important part of my life and for bringing happiness, love, and meaning to my days."</p>
+                <p>"On ur birthday, I wish u endless happiness, good health, success, and all the beautiful things u deserve. May this year bring u closer to ur dreams and fill ur heart with joy."</p>
+                <p>"No matter the distance between us, my love for u only grows stronger, I truly want to spend my life with u my first love. Happy Birthday to the person who means everything to me. ❤️"</p>
+            </div>
 
-</script>
+            <div class="border-t border-amber-500/10 pt-4 mt-4 text-center text-[9px] uppercase tracking-widest text-zinc-400 font-luxury">
+                Click to continue
+            </div>
+        </div>
 
+        <!-- LAYER 3: PRAISE PART 1 (CHAPTER 2) -->
+        <div onclick="flipPage(3)" id="pagePraise1" class="page paper-page flex flex-col justify-between">
+            <div class="text-center text-amber-400/60 text-xs tracking-widest uppercase font-luxury">— Chapter Two —</div>
+            
+            <div class="space-y-4 my-auto">
+                <!-- 1. The Purest Heart -->
+                <div class="text-center">
+                    <span class="text-amber-400/50 text-xs"><i class="fa-solid fa-heart"></i></span>
+                    <h4 class="font-luxury text-xs text-amber-200 tracking-wider uppercase mt-1">The Purest Heart</h4>
+                    <p class="font-romance italic text-rose-100/80 text-[11px] md:text-xs mt-1 leading-relaxed px-1">
+                        "Ur cheerful spirit, kind heart (9lbk tayeb) 'like ur father 😌' , and beautiful spontaneity are among the things I love most about u, u bring joy to every moment and make life brighter just by being yourself. Never change eyounii."
+                    </p>
+                </div>
+                
+                <!-- 2. Your Eyes -->
+                <div class="text-center">
+                    <span class="text-amber-400/50 text-xs"><i class="fa-solid fa-eye"></i></span>
+                    <h4 class="font-luxury text-xs text-amber-200 tracking-wider uppercase mt-1">Your Eyes</h4>
+                    <p class="font-romance italic text-rose-100/80 text-[11px] md:text-xs mt-1 leading-relaxed px-1">
+                        "Ur eyes mashallah are the second thing that took my mind away. I got lost in them deeply, as if they took me far away from everything and carried me into a world where only u exist, (ghre9t ou dho3t fihom sah, dima nd3ii rebbi ykhlihomlii ou myhremniich menhom inchallah ❤️)."
+                    </p>
+                </div>
+            </div>
+
+            <div class="border-t border-amber-500/10 pt-3 text-center text-[9px] uppercase tracking-widest text-zinc-400 font-luxury">
+                Click to continue
+            </div>
+        </div>
+
+        <!-- LAYER 4: PRAISE PART 2 (CHAPTER TWO CONTINUED) -->
+        <div onclick="flipPage(4)" id="pagePraise2" class="page paper-page flex flex-col justify-between">
+            <div class="text-center text-amber-400/60 text-xs tracking-widest uppercase font-luxury">— Praise & Devotion —</div>
+            
+            <div class="space-y-4 my-auto">
+                <!-- Perfect in Your Own Way Section -->
+                <div class="text-center">
+                    <span class="text-amber-400/50 text-xs"><i class="fa-solid fa-crown"></i></span>
+                    <h4 class="font-luxury text-xs text-amber-200 tracking-wider uppercase mt-1">Perfect in Your Own Way</h4>
+                    <p class="font-romance italic text-rose-100/80 text-[11px] md:text-xs mt-1 leading-relaxed px-1">
+                        "Some people see certain traits in u as flaws, but to me they are ur most beautiful features. The way u are naturally yourself, ur honesty, ur emotions, ur principles, really I don’t see them as imperfections at all wallah. I love them, cuz they are part of u baby. ❤️"
+                    </p>
+                </div>
+
+                <!-- My Peace with Dove Icon -->
+                <div class="text-center">
+                    <span class="text-amber-400/50 text-xs"><i class="fa-solid fa-dove"></i></span>
+                    <h4 class="font-luxury text-xs text-amber-200 tracking-wider uppercase mt-1">My Peace</h4>
+                    <p class="font-romance italic text-rose-100/80 text-xs md:text-sm mt-1 leading-relaxed">
+                        "U don't just make me happy, u make me feel at peace. In a world full of noise and chaos, u are the place where my heart finds comfort. Talking to u, hearing ur voice, and knowing you're there makes everything feel lighter. Thank you for being my peace, my safe place, and one of the most beautiful parts of my life."
+                    </p>
+                </div>
+            </div>
+
+            <div class="border-t border-amber-500/10 pt-3 text-center text-[9px] uppercase tracking-widest text-zinc-400 font-luxury">
+                Click to look at us
+            </div>
+        </div>
+
+        <!-- LAYER 5: THE MEMORY PHOTOS (CHAPTER 3) -->
+        <div onclick="flipPage(5)" id="pagePhotos" class="page paper-page flex flex-col justify-between">
+            <div class="text-center text-amber-400/60 text-[10px] tracking-widest uppercase font-luxury mb-2">— Our Journey —</div>
+            
+            <!-- Ordered Grid Layout with Live Cloud Links -->
+            <div class="grid grid-cols-2 gap-x-3 gap-y-4 h-full items-center py-2">
+                <!-- 1. Ramadan -->
+                <div class="flex flex-col items-center">
+                    <div class="rounded-md overflow-hidden h-32 w-full bg-zinc-900 shadow-md border border-amber-500/20">
+                        <img src="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEhC32UMzlWbnorKMZ_JIW6BDS_NS_a7CdcIOoxhwlyFpwGw7Y-qq1FZrC68nlwsKDsmCEBCRYE5rwqodTgEMEkaTV58Co7W6uyUyG4yu-IXgTah01eDdattZYKVsCO6Ln78C-ZRRUP3G2jDpVYObDt3q8qI0vtRM5Ff4CxgslE_-X6O7fYWcxmr_EYDZ7MA/s1536/IMG_20260619_135512_586.jpg" alt="Ramadan" class="w-full h-full object-cover">
+                    </div>
+                    <span class="font-luxury text-[8px] tracking-wider text-amber-200/70 mt-1 uppercase font-semibold">Ramadan</span>
+                </div>
+                
+                <!-- 2. Eid al-Fitr -->
+                <div class="flex flex-col items-center">
+                    <div class="rounded-md overflow-hidden h-32 w-full bg-zinc-900 shadow-md border border-amber-500/20">
+                        <img src="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEjwqSaTrLsCzitHZn5DfDxpnahYcGDFQCrW6BqS8G5cumnuLj7nfNPwfU5r-KNZRL6JQQ0mQeek9gh5gpIBiTJ1F3BRKBwBkgMBksxGEjKq0piJR_1TiD3vrRIBm1eYHhdy0LhWehvyyaWxrFJC9kmvhwPbPnBxRt1GjH3f9bKOis7qWUBMNJkUFJhwwSg2/s1535/IMG_20260619_135512_333.jpg" alt="Eid al-Fitr" class="w-full h-full object-cover">
+                    </div>
+                    <span class="font-luxury text-[8px] tracking-wider text-amber-200/70 mt-1 uppercase font-semibold">Eid al-Fitr</span>
+                </div>
+                
+                <!-- 3. Graduation -->
+                <div class="flex flex-col items-center">
+                    <div class="rounded-md overflow-hidden h-32 w-full bg-zinc-900 shadow-md border border-amber-500/20">
+                        <img src="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEhIG6Vq2p6wjXwCsWzRqhAdbBmcQuwmCsWlVXGz3wi-Be_-JAy0DK4TNgXt1FhQUdBjkruooWlMC_VQ8-0z3fC9ABFoMmZY1notx-8vLNURBcyQvDAodVxcC0ZdqKXFU6IDRGPMi_2eRui_q86r3WrbN5SG3-VKQX7RSIorODP8jAXIG9bfdN44Pk68BfbN/s1535/IMG_20260619_135512_921.jpg" alt="Graduation" class="w-full h-full object-cover">
+                    </div>
+                    <span class="font-luxury text-[8px] tracking-wider text-amber-200/70 mt-1 uppercase font-semibold">Graduation</span>
+                </div>
+                
+                <!-- 4. Eid al-Adha -->
+                <div class="flex flex-col items-center">
+                    <div class="rounded-md overflow-hidden h-32 w-full bg-zinc-900 shadow-md border border-amber-500/20">
+                        <img src="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEielBn84ZAUNntvwHgvGbL6q9nCPJc_J941hLVD0uJrE9WKQieZVUts_byDAkpwmiivMUpCgdyurEbfaXqiRUbpzSsHsEEHTDwScwalGlbR6PqKyiFCyzaz78kC-K_YwHDPXq6VNiG3JqZCOWdeTmwx_PohJTMPWd1cOm1Zi25KuThecdEH_ypTjtDXNXUb/s1535/IMG_20260619_135512_863.jpg" alt="Eid al-Adha" class="w-full h-full object-cover">
+                    </div>
+                    <span class="font-luxury text-[8px] tracking-wider text-amber-200/70 mt-1 uppercase font-semibold">Eid al-Adha</span>
+                </div>
+            </div>
+
+            <div class="text-center text-[9px] text-zinc-400 uppercase tracking-widest mt-2 border-t border-amber-500/10 pt-1">
+                Click to seal the book
+            </div>
+        </div>
+
+    </div>
+
+    <!-- CONCLUDING MESSAGE & CREDITS INTERFACE -->
+    <div id="finalMessage" class="absolute flex flex-col items-center justify-center opacity-0 transition-opacity duration-1000 space-y-6 pointer-events-none z-10 transform translate-y-[-20px]">
+        <div class="text-center space-y-2">
+            <h2 class="font-luxury text-amber-200 text-2xl tracking-widest">AMOR VINCIT OMNIA</h2>
+            <p class="font-romance italic text-zinc-500 text-sm">Happy Birthday, My Queen.</p>
+        </div>
+        
+        <!-- Designer Credit Line -->
+        <div class="pt-4 border-t border-amber-500/10 w-48 text-center space-y-1">
+            <span class="text-[9px] tracking-[0.3em] font-luxury text-zinc-600 block uppercase">Designed by</span>
+            <span class="text-xs tracking-widest font-luxury text-amber-100/70 block uppercase font-semibold">Iskander</span>
+            <span class="text-[8px] tracking-wider font-sans text-zinc-600 block font-light">June 20, 2026</span>
+        </div>
+    </div>
+
+    <script>
+        const book = document.getElementById('birthdayBook');
+        const clockElement = document.getElementById('countdownClock');
+        
+        let currentSecond = 55;
+
+        function startTimerSequence() {
+            const countdownInterval = setInterval(() => {
+                currentSecond++;
+                if (currentSecond < 60) {
+                    clockElement.innerText = `23:59:${currentSecond}`;
+                } else {
+                    clearInterval(countdownInterval);
+                    clockElement.innerText = "00:00:00";
+                    triggerBirthdayMidnight();
+                }
+            }, 1000);
+        }
+
+        function triggerBirthdayMidnight() {
+            setTimeout(() => {
+                // Fade out countdown
+                const timerBox = document.getElementById('timerContainer');
+                timerBox.classList.add('opacity-0', 'scale-95');
+                
+                setTimeout(() => {
+                    timerBox.classList.add('hidden');
+                    
+                    // Display word sequencer container
+                    const sequencerBox = document.getElementById('wordSequencer');
+                    const sequencerText = document.getElementById('sequencerText');
+                    sequencerBox.classList.remove('hidden');
+                    
+                    const words = ["Happy", "birthday", "to you", "Weffouchti", "Happy birthday to you Weffouchti"];
+                    let step = 0;
+
+                    function showNextWord() {
+                        if (step < words.length) {
+                            // Reset animation styling state dynamically
+                            sequencerText.classList.remove('text-glow-reveal');
+                            sequencerText.offsetHeight; // Force DOM layout reflow
+                            
+                            sequencerText.innerText = words[step];
+                            sequencerText.classList.add('text-glow-reveal');
+                            
+                            // Adjust display timing: separate single elements get 1.2s, combined layout stays longer
+                            let delay = (step === words.length - 1) ? 2500 : 1200;
+                            step++;
+                            setTimeout(showNextWord, delay);
+                        } else {
+                            // Fade out sequencer to make room for cake sequence
+                            sequencerBox.classList.add('opacity-0', 'scale-95');
+                            setTimeout(() => {
+                                sequencerBox.classList.add('hidden');
+                                revealBirthdayCake();
+                            }, 1000);
+                        }
+                    }
+                    
+                    showNextWord();
+                }, 1000);
+            }, 1000);
+        }
+
+        function revealBirthdayCake() {
+            const cakeBox = document.getElementById('cakeContainer');
+            cakeBox.classList.remove('hidden');
+            cakeBox.offsetHeight; 
+            cakeBox.classList.remove('opacity-0', 'scale-90');
+            
+            setTimeout(() => {
+                const candleLayer = document.getElementById('candleLayer');
+                candleLayer.classList.remove('opacity-0');
+                candleLayer.classList.add('animate-candle-stick');
+                
+                setTimeout(() => {
+                    const flames = document.querySelectorAll('.live-flame');
+                    flames.forEach(flame => flame.classList.remove('opacity-0'));
+
+                    const instruction = document.getElementById('cakeInstruction');
+                    instruction.innerText = "Make a wish, my love...";
+                    instruction.classList.add('text-amber-200', 'animate-pulse');
+
+                    // AUTOMATIC EXTINGUISH TIMER (Triggers 2.5 seconds after lighting)
+                    setTimeout(() => {
+                        autoBlowOutCandles();
+                    }, 2500);
+
+                }, 1200);
+            }, 800);
+        }
+
+        // AUTOMATIC EXTINCTION SEQUENCE
+        function autoBlowOutCandles() {
+            // Trigger smoke puff elements
+            const puffs = document.querySelectorAll('.smoke-puff');
+            puffs.forEach(puff => puff.classList.add('smoke-active'));
+
+            // Fade flames out immediately
+            const flames = document.querySelectorAll('.live-flame');
+            flames.forEach(flame => {
+                flame.style.transition = "all 0.4s ease-out";
+                flame.classList.add('opacity-0');
+            });
+
+            // Dim candle wax textures out perfectly
+            document.getElementById('candleText2').className = "font-luxury text-4xl font-bold text-zinc-600 drop-shadow-none z-10 transition-all duration-1000";
+            document.getElementById('candleText4').className = "font-luxury text-4xl font-bold text-zinc-600 drop-shadow-none z-10 transition-all duration-1000";
+
+            // Update footer status message
+            const instruction = document.getElementById('cakeInstruction');
+            instruction.classList.remove('animate-pulse', 'text-amber-200');
+            instruction.innerText = "Your wish is sealed forever.";
+            instruction.classList.add('text-zinc-500');
+
+            // Bring out the key button container smoothly right after
+            setTimeout(() => {
+                const unlockBtn = document.getElementById('unlockAction');
+                unlockBtn.classList.remove('hidden');
+                unlockBtn.offsetHeight;
+                unlockBtn.classList.remove('opacity-0');
+            }, 1000);
+        }
+
+        // UNLOCK BOOK ACTION
+        function unlockBook() {
+            document.getElementById('bgMusic').play().catch(e => {});
+            document.getElementById('entranceSection').classList.add('opacity-0', 'pointer-events-none');
+            setTimeout(() => {
+                book.classList.add('visible');
+            }, 500);
+        }
+
+        // PAGE NAVIGATION HOOK
+        function flipPage(step) {
+            if (step === 1) {
+                book.classList.add('open-1');
+            } else if (step === 2) {
+                book.classList.add('open-2');
+            } else if (step === 3) {
+                book.classList.add('open-3');
+            } else if (step === 4) {
+                book.classList.add('open-4');
+            } else if (step === 5) {
+                book.classList.remove('open-1', 'open-2', 'open-3', 'open-4');
+                book.classList.add('closed-final');
+                
+                setTimeout(() => {
+                    const text = document.getElementById('finalMessage');
+                    text.classList.remove('opacity-0');
+                    text.classList.add('opacity-100');
+                }, 1200);
+            }
+        }
+
+        // BACKGROUND ANIMATIONS ENGINE
+        const container = document.getElementById('petalContainer');
+        setInterval(() => {
+            if(container.children.length > 20) return;
+            const p = document.createElement('div');
+            p.classList.add('petal');
+            p.style.left = Math.random() * 100 + 'vw';
+            const size = Math.random() * 10 + 6;
+            p.style.width = size + 'px';
+            p.style.height = size * 1.3 + 'px';
+            p.style.animationDuration = (Math.random() * 4 + 6) + 's';
+            container.appendChild(p);
+            setTimeout(() => p.remove(), 9000);
+        }, 600);
+
+        window.addEventListener('DOMContentLoaded', startTimerSequence);
+    </script>
 </body>
 </html>
